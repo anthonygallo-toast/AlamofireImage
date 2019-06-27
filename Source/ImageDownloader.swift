@@ -373,6 +373,7 @@ open class ImageDownloader {
                         }
                     case .failure:
                         for (_, _, completion) in responseHandler.operations {
+                            print("Download failure \(response)")
                             DispatchQueue.main.async { completion?(response) }
                         }
                     }
