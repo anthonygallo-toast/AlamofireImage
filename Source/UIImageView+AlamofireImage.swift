@@ -334,6 +334,7 @@ extension UIImageView {
                     strongSelf.isURLRequestURLEqualToActiveRequestURL(response.request) &&
                     strongSelf.af_activeRequestReceipt?.receiptID == downloadID
                 else {
+                    print("Download completed but guard failed urlRequest: \(urlRequest) response request \(response)")
                     completion?(response)
                     return
                 }
