@@ -392,21 +392,26 @@ open class ImageDownloader {
                 filter: filter,
                 completion: completion
             )
+            
+            print("response handler stored \(handlerID)")
 
             self.responseHandlers[urlID] = responseHandler
 
             // 5) Either start the request or enqueue it depending on the current active request count
             if self.isActiveRequestCountBelowMaximumLimit() {
+                 print("Below limit so start")
                 self.start(request)
             } else {
+                print("above limit so enqueue")
                 self.enqueue(request)
             }
         }
 
         if let request = request {
+            print("created receipt")
             return RequestReceipt(request: request, receiptID: receiptID)
         }
-
+        print("return nil")
         return nil
     }
 
@@ -542,6 +547,7 @@ open class ImageDownloader {
         switch downloadPrioritization {
         case .fifo:
             queuedRequests.append(request)
+            print("after enqueued \(queuedRequests)")
         case .lifo:
             queuedRequests.insert(request, at: 0)
         }
@@ -550,7 +556,7 @@ open class ImageDownloader {
     @discardableResult
     func dequeue() -> Request? {
         var request: Request?
-
+        print("begin dequeue \(queuedRequests)")
         if !queuedRequests.isEmpty {
             request = queuedRequests.removeFirst()
         }
