@@ -477,10 +477,10 @@ open class ImageDownloader {
                 DispatchQueue.main.async { operation.completion?(response) }
             }
 
-            if responseHandler.operations.isEmpty && requestReceipt.request.task?.state == .suspended {
+            //if responseHandler.operations.isEmpty && requestReceipt.request.task?.state == .suspended {
                 requestReceipt.request.cancel()
                 self.responseHandlers.removeValue(forKey: urlID)
-            }
+            //}
         }
     }
 
