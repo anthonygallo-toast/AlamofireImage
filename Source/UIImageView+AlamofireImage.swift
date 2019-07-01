@@ -340,9 +340,10 @@ extension UIImageView {
                 }
 
                 if case .success(let image) = response.result {
+                    print("Download completed and is to be set with: \(urlRequest) response request \(response)")
                     strongSelf.run(imageTransition, with: image)
                 }
-
+                print("setting active request to nil: \(urlRequest) response request \(response) active \(strongSelf.af_activeRequestReceipt)")
                 strongSelf.af_activeRequestReceipt = nil
 
                 completion?(response)
