@@ -273,6 +273,7 @@ open class ImageDownloader {
             let urlID = ImageDownloader.urlIdentifier(for: urlRequest)
 
             if let responseHandler = self.responseHandlers[urlID] {
+                print("Found a responseHandler from array: \(responseHandler)  id: \(urlID)")
                 responseHandler.operations.append((receiptID: receiptID, filter: filter, completion: completion))
                 request = responseHandler.request
                 return
@@ -282,6 +283,7 @@ open class ImageDownloader {
             if let request = urlRequest.urlRequest {
                 switch request.cachePolicy {
                 case .useProtocolCachePolicy, .returnCacheDataElseLoad, .returnCacheDataDontLoad:
+                    print("check cache again")
                     if let image = self.imageCache?.image(for: request, withIdentifier: filter?.identifier) {
                         DispatchQueue.main.async {
                             let response = DataResponse<Image>(
@@ -292,7 +294,7 @@ open class ImageDownloader {
                                 serializationDuration: 0.0,
                                 result: .success(image)
                             )
-
+                            print("found in cache this time \(response)")
                             completion?(response)
                         }
 
@@ -305,7 +307,7 @@ open class ImageDownloader {
 
             // 3) Create the request and set up authentication, validation and response serialization
             request = self.session.request(urlRequest)
-
+           
             if let credential = self.credential {
                 request.authenticate(with: credential)
             }
@@ -318,7 +320,7 @@ open class ImageDownloader {
 
             // Generate a unique handler id to check whether the active request has changed while downloading
             let handlerID = UUID().uuidString
-
+            print("begin real download \(request) \(urlRequest)")
             request.response(
                 queue: self.responseQueue,
                 responseSerializer: imageResponseSerializer,
@@ -333,11 +335,13 @@ open class ImageDownloader {
                     // Early out if the request has changed out from under us
                     let handler = strongSelf.safelyFetchResponseHandler(withURLIdentifier: urlID)
                     guard handler?.handlerID == handlerID else { return }
+                    print("handler ID matches \(handlerID)")
 
                     guard let responseHandler = strongSelf.safelyRemoveResponseHandler(withURLIdentifier: urlID) else {
                         return
                     }
-
+                    print("responseHandler safely removed \(responseHandler)")
+                    
                     switch response.result {
                     case .success(let image):
                         var filteredImages: [String: Image] = [:]
@@ -357,7 +361,7 @@ open class ImageDownloader {
                             }
 
                             strongSelf.imageCache?.add(filteredImage, for: request, withIdentifier: filter?.identifier)
-
+                            print("successfully downloaded and stored in cache \(filteredImage)")
                             DispatchQueue.main.async {
                                 let response = DataResponse<Image>(
                                     request: response.request,
@@ -367,7 +371,7 @@ open class ImageDownloader {
                                     serializationDuration: response.serializationDuration,
                                     result: .success(filteredImage)
                                 )
-
+                                print("sending successful response \(response)")
                                 completion?(response)
                             }
                         }

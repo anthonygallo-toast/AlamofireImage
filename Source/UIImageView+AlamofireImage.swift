@@ -265,6 +265,7 @@ extension UIImageView {
         runImageTransitionIfCached: Bool = false,
         completion: ((DataResponse<UIImage>) -> Void)? = nil)
     {
+        print("1. begin setting image \(urlRequest)")
         guard !isURLRequestURLEqualToActiveRequestURL(urlRequest) else {
             let response = DataResponse<UIImage>(
                 request: nil,
@@ -274,7 +275,7 @@ extension UIImageView {
                 serializationDuration: 0.0,
                 result: .failure(AFIError.requestCancelled)
             )
-
+            print("Fails in compare guard: \(urlRequest) response request \(response)")
             completion?(response)
 
             return
@@ -298,7 +299,7 @@ extension UIImageView {
                 serializationDuration: 0.0,
                 result: .success(image)
             )
-
+            print("2. Found image cache: \(urlRequest) response request \(response)")
             if runImageTransitionIfCached {
                 let tinyDelay = DispatchTime.now() + Double(Int64(0.001 * Float(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
 
@@ -322,6 +323,7 @@ extension UIImageView {
         let downloadID = UUID().uuidString
 
         // Download the image, then run the image transition or completion handler
+        print("Begin Download: \(urlRequest)")
         let requestReceipt = imageDownloader.download(
             urlRequest,
             receiptID: downloadID,
@@ -329,6 +331,7 @@ extension UIImageView {
             progress: progress,
             progressQueue: progressQueue,
             completion: { [weak self] response in
+                print("Download completed request: \(urlRequest) response request \(response)")
                 guard
                     let strongSelf = self,
                     strongSelf.isURLRequestURLEqualToActiveRequestURL(response.request) &&
@@ -340,16 +343,15 @@ extension UIImageView {
                 }
 
                 if case .success(let image) = response.result {
-                    print("Download completed and is to be set with: \(urlRequest) response request \(response)")
+                    print("Download completed and image has been set: \(urlRequest) response request \(response)")
                     strongSelf.run(imageTransition, with: image)
                 }
-                print("setting active request to nil: \(urlRequest) response request \(response) active \(strongSelf.af_activeRequestReceipt)")
                 strongSelf.af_activeRequestReceipt = nil
 
                 completion?(response)
             }
         )
-
+        print("active receupt is set to request receipt: \(urlRequest) response request \(requestReceipt)")
         af_activeRequestReceipt = requestReceipt
     }
 
@@ -357,8 +359,9 @@ extension UIImageView {
 
     /// Cancels the active download request, if one exists.
     public func af_cancelImageRequest() {
+        print("begin cancel receipt")
         guard let activeRequestReceipt = af_activeRequestReceipt else { return }
-
+        print("cancel active receipt")
         let imageDownloader = af_imageDownloader ?? UIImageView.af_sharedImageDownloader
         imageDownloader.cancelRequest(with: activeRequestReceipt)
 
