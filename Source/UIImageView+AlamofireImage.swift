@@ -292,6 +292,7 @@ extension UIImageView {
             )
             print("DOES NOT HAVE A URL \(urlRequest)")
             completion?(response)
+            return
         }
 
         af_cancelImageRequest()
