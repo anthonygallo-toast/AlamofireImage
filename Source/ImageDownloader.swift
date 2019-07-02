@@ -547,7 +547,7 @@ open class ImageDownloader {
         switch downloadPrioritization {
         case .fifo:
             queuedRequests.append(request)
-            print("after enqueued \(queuedRequests)")
+            debugPrint("after enqueued \(queuedRequests)")
         case .lifo:
             queuedRequests.insert(request, at: 0)
         }
@@ -556,11 +556,12 @@ open class ImageDownloader {
     @discardableResult
     func dequeue() -> Request? {
         var request: Request?
-        print("begin dequeue \(queuedRequests)")
+        debugPrint("begin dequeue \(queuedRequests)")
+       
         if !queuedRequests.isEmpty {
             request = queuedRequests.removeFirst()
         }
-
+        print("dequeue stack left \(queuedRequests.count)")
         return request
     }
 
