@@ -485,7 +485,7 @@ open class ImageDownloader {
 
                 DispatchQueue.main.async { operation.completion?(response) }
             }
-            debugPrint("trying to cancel reqeust by removing response handler \(requestReceipt.request.task?.state)")
+            debugPrint("trying to cancel reqeust by removing response handler \(requestReceipt.request.task?.state.rawValue)")
             if responseHandler.operations.isEmpty && requestReceipt.request.task?.state == .suspended {
                 requestReceipt.request.cancel()
                 self.responseHandlers.removeValue(forKey: urlID)
