@@ -485,7 +485,7 @@ open class ImageDownloader {
 
                 DispatchQueue.main.async { operation.completion?(response) }
             }
-            debugPrint("trying to cancel reqeust by removing response handler \(requestReceipt.request.task?.state.rawValue)")
+            debugPrint("trying to cancel reqeust by removing response handler \(requestReceipt.request.url) \(requestReceipt.request.task?.state.rawValue)")
             if responseHandler.operations.isEmpty && requestReceipt.request.task?.state == .suspended {
                 requestReceipt.request.cancel()
                 self.responseHandlers.removeValue(forKey: urlID)
@@ -521,14 +521,14 @@ open class ImageDownloader {
 
             while !self.queuedRequests.isEmpty {
                 if let request = self.dequeue() {
-                    print("grabbed dequeue request \(request)")
+                    print("grabbed dequeue request \(request) \(request?.request.url)")
                     print("check current task \(request.tasks)")
                     if request.task?.state == .suspended {
                         print("request is correctly in a state of .suspended \(request)")
                         self.start(request)
                         break
                     }
-                    print("did NOT START REQUEST!")
+                    print("did NOT START REQUEST! \(request)")
                 }
             }
         }
