@@ -307,7 +307,8 @@ open class ImageDownloader {
 
             // 3) Create the request and set up authentication, validation and response serialization
             request = self.session.request(urlRequest)
-            guard request.request?.url != nil else {
+            print("created request \(request)")
+            guard request.request?.url == nil else {
                 print("DID NOT CREATE A REAL REQUEST \(urlRequest)")
                 
                 return
