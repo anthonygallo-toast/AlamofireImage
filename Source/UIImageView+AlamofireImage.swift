@@ -281,7 +281,7 @@ extension UIImageView {
             return
         }
         
-        guard _ = urlRequest.urlRequest?.url else {
+        guard urlRequest.urlRequest?.url != nil else {
             let response = DataResponse<UIImage>(
                 request: nil,
                 response: nil,
