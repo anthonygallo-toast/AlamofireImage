@@ -266,7 +266,8 @@ extension UIImageView {
         completion: ((DataResponse<UIImage>) -> Void)? = nil)
     {
         print("1. begin setting image \(urlRequest)")
-        guard !isURLRequestURLEqualToActiveRequestURL(urlRequest) else {
+        guard !isURLRequestURLEqualToActiveRequestURL(urlRequest),
+        urlRequest.url else {
             let response = DataResponse<UIImage>(
                 request: nil,
                 response: nil,
@@ -279,6 +280,19 @@ extension UIImageView {
             completion?(response)
 
             return
+        }
+        
+        guard _ = urlRequest.urlRequest.url else {
+            let response = DataResponse<UIImage>(
+                request: nil,
+                response: nil,
+                data: nil,
+                metrics: nil,
+                serializationDuration: 0.0,
+                result: .failure(AFIError.requestCancelled)
+            )
+            print("DOES NOT HAVE A URL \(urlRequest)")
+            completion?(response)
         }
 
         af_cancelImageRequest()
