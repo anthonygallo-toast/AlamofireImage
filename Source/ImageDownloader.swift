@@ -520,9 +520,14 @@ open class ImageDownloader {
             guard self.isActiveRequestCountBelowMaximumLimit() else { return }
 
             while !self.queuedRequests.isEmpty {
-                if let request = self.dequeue(), request.task?.state == .suspended {
-                    self.start(request)
-                    break
+                if let request = self.dequeue() {
+                    print("grabbed dequeue request")
+                    if request.task?.state == .suspended {
+                        print("request is correctly in a state of .suspended \(request)")
+                        self.start(request)
+                        break
+                    }
+                    print("did NOT START REQUEST!")
                 }
             }
         }
