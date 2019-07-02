@@ -351,7 +351,7 @@ extension UIImageView {
                 completion?(response)
             }
         )
-        print("active receupt is set to request receipt: \(urlRequest) response request \(requestReceipt)")
+        print("active receupt is set to request receipt: \(urlRequest) response request \(requestReceipt?.receiptID)")
         af_activeRequestReceipt = requestReceipt
     }
 
@@ -359,9 +359,9 @@ extension UIImageView {
 
     /// Cancels the active download request, if one exists.
     public func af_cancelImageRequest() {
-        print("begin cancel receipt")
+        print("begin cancel receipt \(af_activeRequestReceipt?.receiptID)")
         guard let activeRequestReceipt = af_activeRequestReceipt else { return }
-        print("cancel active receipt")
+        print("cancel active receipt \(af_activeRequestReceipt?.receiptID)")
         let imageDownloader = af_imageDownloader ?? UIImageView.af_sharedImageDownloader
         imageDownloader.cancelRequest(with: activeRequestReceipt)
 
