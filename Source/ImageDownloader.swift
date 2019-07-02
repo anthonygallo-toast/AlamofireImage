@@ -487,6 +487,7 @@ open class ImageDownloader {
             }
             debugPrint("trying to cancel reqeust by removing response handler \(requestReceipt.request.request?.url) \(requestReceipt.request.task?.state.rawValue)")
             if responseHandler.operations.isEmpty && requestReceipt.request.task?.state == .suspended {
+                print("remove the response handler for key \(urlID)")
                 requestReceipt.request.cancel()
                 self.responseHandlers.removeValue(forKey: urlID)
             }
