@@ -567,7 +567,7 @@ open class ImageDownloader {
        
         if !queuedRequests.isEmpty {
             request = queuedRequests.removeFirst()
-            print("request: \(request.request) task: \(request.task) url: \(request.request?.url) httpmethod: \(request.request?.httpMethod)")
+            print("request: \(request?.request) task: \(request?.task) url: \(request?.request?.url) httpmethod: \(request?.request?.httpMethod)")
         }
         print("dequeue stack left \(queuedRequests.count)")
         return request
