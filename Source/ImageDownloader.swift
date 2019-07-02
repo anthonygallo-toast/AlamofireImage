@@ -521,7 +521,8 @@ open class ImageDownloader {
 
             while !self.queuedRequests.isEmpty {
                 if let request = self.dequeue() {
-                    print("grabbed dequeue request \(request.task?.state)")
+                    print("grabbed dequeue request \(request)")
+                    print("check current task \(request.tasks)")
                     if request.task?.state == .suspended {
                         print("request is correctly in a state of .suspended \(request)")
                         self.start(request)
