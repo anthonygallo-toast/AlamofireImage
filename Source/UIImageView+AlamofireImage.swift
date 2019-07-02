@@ -266,8 +266,7 @@ extension UIImageView {
         completion: ((DataResponse<UIImage>) -> Void)? = nil)
     {
         print("1. begin setting image \(urlRequest)")
-        guard !isURLRequestURLEqualToActiveRequestURL(urlRequest),
-        urlRequest.url else {
+        guard !isURLRequestURLEqualToActiveRequestURL(urlRequest) else {
             let response = DataResponse<UIImage>(
                 request: nil,
                 response: nil,
@@ -282,7 +281,7 @@ extension UIImageView {
             return
         }
         
-        guard _ = urlRequest.urlRequest.url else {
+        guard _ = urlRequest.urlRequest?.url else {
             let response = DataResponse<UIImage>(
                 request: nil,
                 response: nil,
