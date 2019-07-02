@@ -309,15 +309,7 @@ open class ImageDownloader {
             request = self.session.request(urlRequest)
             guard request.request?.url != nil else {
                 print("DID NOT CREATE A REAL REQUEST \(urlRequest)")
-                let response = DataResponse<Image>(
-                    request: urlRequest.urlRequest,
-                    response: nil,
-                    data: nil,
-                    metrics: nil,
-                    serializationDuration: 0.0,
-                    result: .success(image)
-                )
-                completion?(response)
+                
                 return
             }
            
