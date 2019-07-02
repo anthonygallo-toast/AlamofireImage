@@ -552,6 +552,7 @@ open class ImageDownloader {
     func enqueue(_ request: Request) {
         switch downloadPrioritization {
         case .fifo:
+            print("request: \(request) task: \(request.task) url: \(request.url) httpmethod: \(request.httpMethod)")
             queuedRequests.append(request)
             debugPrint("after enqueued \(queuedRequests)")
         case .lifo:
@@ -566,6 +567,7 @@ open class ImageDownloader {
        
         if !queuedRequests.isEmpty {
             request = queuedRequests.removeFirst()
+            print("request: \(request) task: \(request.task) url: \(request.url) httpmethod: \(request.httpMethod)")
         }
         print("dequeue stack left \(queuedRequests.count)")
         return request
