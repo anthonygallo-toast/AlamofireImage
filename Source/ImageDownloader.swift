@@ -560,7 +560,7 @@ open class ImageDownloader {
         switch downloadPrioritization {
         case .fifo:
             print("request: \(request.request) task: \(request.task) url: \(request.request?.url) httpmethod: \(request.request?.httpMethod), urlID: \(urlID)")
-            queuedRequests.append(urlID, request)
+            queuedRequests.append((urlID, request))
             debugPrint("after enqueued \(queuedRequests)")
         case .lifo:
             queuedRequests.insert((urlID, request), at: 0)
@@ -574,8 +574,10 @@ open class ImageDownloader {
         debugPrint("begin dequeue \(queuedRequests)")
        
         if !queuedRequests.isEmpty {
-            (urlID, request) = queuedRequests.removeFirst()
-            print("request: \(request?.request) task: \(request?.task) url: \(request?.request?.url) httpmethod: \(request?.request?.httpMethod)")
+            let (qUrl, qRequest) = queuedRequests.removeFirst()
+            print("request: \(qRequest?.request) task: \(qRequest?.task) url: \(qRequest?.request?.url) httpmethod: \(qRequest?.request?.httpMethod) urlID: \(qUrl)")
+            urlID = qUrl
+            request = qRequest
         }
         guard request?.request != nil else {
             safelyRemoveResponseHandler(withURLIdentifier: urlID)
