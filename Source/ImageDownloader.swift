@@ -111,7 +111,7 @@ open class ImageDownloader {
     let maximumActiveDownloads: Int
 
     var activeRequestCount = 0
-    var queuedRequests: [Request] = []
+    var queuedRequests: [(String, Request)] = []
     var responseHandlers: [String: ResponseHandler] = [:]
 
     private let synchronizationQueue: DispatchQueue = {
@@ -409,7 +409,7 @@ open class ImageDownloader {
                 self.start(request)
             } else {
                 print("above limit so enqueue")
-                self.enqueue(request)
+                self.enqueue(urlID, request)
             }
         }
 
@@ -556,25 +556,30 @@ open class ImageDownloader {
         activeRequestCount += 1
     }
 
-    func enqueue(_ request: Request) {
+    func enqueue(_ urlID: String, _ request: Request) {
         switch downloadPrioritization {
         case .fifo:
-            print("request: \(request.request) task: \(request.task) url: \(request.request?.url) httpmethod: \(request.request?.httpMethod)")
-            queuedRequests.append(request)
+            print("request: \(request.request) task: \(request.task) url: \(request.request?.url) httpmethod: \(request.request?.httpMethod), urlID: \(urlID)")
+            queuedRequests.append(urlID, request)
             debugPrint("after enqueued \(queuedRequests)")
         case .lifo:
-            queuedRequests.insert(request, at: 0)
+            queuedRequests.insert((urlID, request), at: 0)
         }
     }
 
     @discardableResult
     func dequeue() -> Request? {
         var request: Request?
+        var urlID: String
         debugPrint("begin dequeue \(queuedRequests)")
        
         if !queuedRequests.isEmpty {
-            request = queuedRequests.removeFirst()
+            (urlID, request) = queuedRequests.removeFirst()
             print("request: \(request?.request) task: \(request?.task) url: \(request?.request?.url) httpmethod: \(request?.request?.httpMethod)")
+        }
+        guard request?.request != nil else {
+            safelyRemoveResponseHandler(withURLIdentifier: urlID)
+            return request
         }
         print("dequeue stack left \(queuedRequests.count)")
         return request
