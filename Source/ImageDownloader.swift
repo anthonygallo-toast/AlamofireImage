@@ -575,7 +575,7 @@ open class ImageDownloader {
        
         if !queuedRequests.isEmpty {
             let (qUrl, qRequest) = queuedRequests.removeFirst()
-            print("request: \(qRequest?.request) task: \(qRequest?.task) url: \(qRequest?.request?.url) httpmethod: \(qRequest?.request?.httpMethod) urlID: \(qUrl)")
+            print("request: \(qRequest.request) task: \(qRequest.task) url: \(qRequest.request?.url) httpmethod: \(qRequest.request?.httpMethod) urlID: \(qUrl)")
             urlID = qUrl
             request = qRequest
         }
