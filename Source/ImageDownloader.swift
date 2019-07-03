@@ -578,6 +578,7 @@ open class ImageDownloader {
             print("request: \(qRequest.request) task: \(qRequest.task) url: \(qRequest.request?.url) httpmethod: \(qRequest.request?.httpMethod) urlID: \(qUrl)")
             urlID = qUrl
             request = qRequest
+            return request
         }
         guard request?.request != nil else {
             safelyRemoveResponseHandler(withURLIdentifier: urlID)
