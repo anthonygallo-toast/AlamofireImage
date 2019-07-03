@@ -580,6 +580,7 @@ open class ImageDownloader {
             request = qRequest
         }
         guard request?.request != nil else {
+            print("removing response handler \(urlID)")
             self.responseHandlers.removeValue(forKey: urlID)
             return request
         }
