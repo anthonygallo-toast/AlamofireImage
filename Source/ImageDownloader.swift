@@ -141,7 +141,7 @@ open class ImageDownloader {
 
         configuration.requestCachePolicy = .useProtocolCachePolicy
         configuration.allowsCellularAccess = true
-        configuration.timeoutIntervalForRequest = 120
+        configuration.timeoutIntervalForRequest = 60
 
         configuration.urlCache = ImageDownloader.defaultURLCache()
 
@@ -308,10 +308,10 @@ open class ImageDownloader {
             // 3) Create the request and set up authentication, validation and response serialization
             request = self.session.request(urlRequest)
             print("created request \(request)")
-            guard request.request?.url == nil else {
-                print("DID NOT CREATE A REAL REQUEST \(urlRequest)")
-                
-                return
+            if request.request?.url != nil {
+                print("DID CREATE A REAL REQUEST \(request.request?.url) \(urlRequest)")
+            } else {
+                print("DID NOT CREATE A REAL REQUEST \(request.request?.url) \(urlRequest)")
             }
            
             if let credential = self.credential {
