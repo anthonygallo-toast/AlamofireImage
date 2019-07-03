@@ -580,7 +580,7 @@ open class ImageDownloader {
             request = qRequest
         }
         guard request?.request != nil else {
-            safelyRemoveResponseHandler(withURLIdentifier: urlID)
+            self.responseHandlers.removeValue(forKey: urlID)
             return request
         }
         print("dequeue stack left \(queuedRequests.count)")
