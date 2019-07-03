@@ -141,7 +141,7 @@ open class ImageDownloader {
 
         configuration.requestCachePolicy = .useProtocolCachePolicy
         configuration.allowsCellularAccess = true
-        configuration.timeoutIntervalForRequest = 60
+        configuration.timeoutIntervalForRequest = 120
 
         configuration.urlCache = ImageDownloader.defaultURLCache()
 
