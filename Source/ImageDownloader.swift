@@ -394,7 +394,6 @@ open class ImageDownloader {
             if self.isActiveRequestCountBelowMaximumLimit() {
                 self.start(request)
             } else {
-                self.enqueue(request)
                 self.enqueue(urlID, request)
             }
         }
