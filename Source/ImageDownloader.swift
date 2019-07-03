@@ -111,7 +111,7 @@ open class ImageDownloader {
     let maximumActiveDownloads: Int
 
     var activeRequestCount = 0
-    var queuedRequests: [Request] = []
+    var queuedRequests: [(String, Request)] = []
     var responseHandlers: [String: ResponseHandler] = [:]
 
     private let synchronizationQueue: DispatchQueue = {
@@ -395,6 +395,7 @@ open class ImageDownloader {
                 self.start(request)
             } else {
                 self.enqueue(request)
+                self.enqueue(urlID, request)
             }
         }
 
@@ -533,21 +534,28 @@ open class ImageDownloader {
         activeRequestCount += 1
     }
 
-    func enqueue(_ request: Request) {
+    func enqueue(_ urlID: String, _ request: Request) {
         switch downloadPrioritization {
         case .fifo:
-            queuedRequests.append(request)
+            queuedRequests.append((urlID, request))
         case .lifo:
-            queuedRequests.insert(request, at: 0)
+            queuedRequests.insert((urlID, request), at: 0)
         }
     }
 
     @discardableResult
     func dequeue() -> Request? {
         var request: Request?
+        var urlID: String = ""
 
         if !queuedRequests.isEmpty {
-            request = queuedRequests.removeFirst()
+            let (qUrl, qRequest) = queuedRequests.removeFirst()
+            urlID = qUrl
+            request = qRequest
+        }
+        guard request?.request != nil else {
+            self.responseHandlers.removeValue(forKey: urlID)
+            return request
         }
 
         return request
